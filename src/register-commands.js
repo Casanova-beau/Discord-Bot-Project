@@ -10,7 +10,7 @@ const commands = [
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
-async () => {
+(async () => {
   try {
     console.log("🔄 Started refreshing application (/) commands.");
 
@@ -28,4 +28,4 @@ async () => {
   } catch (error) {
     console.error("❌ Failed to reload application (/) commands:", error);
   }
-};
+})();
