@@ -14,14 +14,14 @@ module.exports = (client) => {
 
     if (command === "calc" || command === "calculate") {
       if (args.length === 0) {
-        return message.reply("Please provide a math expression to calculate.\nExample: `!calc 2 * (3 + 4)`");
+        return message.channel.send("Please provide a math expression to calculate.\nExample: `!calc 2 * (3 + 4)`");
       }
       const expression = args.join(" ");
       try {
         const result = evaluate(expression);
         message.reply(`Result: \`${result}\``);
       } catch (err) {
-        message.reply("Invalid expression. Please enter a valid math expression.");
+        message.channel.send("Invalid expression. Please enter a valid math expression.");
       }
     }
     // Add more commands here
