@@ -1,13 +1,18 @@
 module.exports = async (client, guildId) => {
-  let applicationCommands;
+  try {
+    let applicationCommands;
 
-  if (guildId) {
-    const guild = await client.guilds.fetch(guildId);
-    applicationCommands = guild.commands;
-  } else {
-    applicationCommands = await client.application.commands;
+    if (guildId) {
+      const guild = await client.guilds.fetch(guildId);
+      applicationCommands = guild.commands;
+    } else {
+      applicationCommands = client.application.commands;
+    }
+
+    await applicationCommands.fetch(); // Ensure commands are up-to-date
+    return applicationCommands;
+  } catch (error) {
+    console.error("❌ Error fetching application commands:", error.message);
+    return null;
   }
-
-  await applicationCommands.fetch();
-  return applicationCommands;
 };

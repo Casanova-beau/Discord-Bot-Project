@@ -11,17 +11,29 @@ module.exports = async (client) => {
       testServer
     );
 
-    for (const localCommand of localCommands) {
-      const { name, description, options } = localCommand;
+    const summary = [];
 
-      const existingCommand = await applicationCommands.cache.find(
+    for (const localCommand of localCommands) {
+      const { name, description, options = [], deleted } = localCommand;
+
+      // Validate required fields
+      if (!name || !description) {
+        console.warn(
+          `⚠️ Skipping command with missing name or description:`,
+          localCommand
+        );
+        continue;
+      }
+
+      const existingCommand = applicationCommands.cache.find(
         (cmd) => cmd.name === name
       );
 
       if (existingCommand) {
-        if (localCommand.deleted) {
+        if (deleted) {
           await applicationCommands.delete(existingCommand.id);
           console.log(`🗑 Deleted command "${name}".`);
+          summary.push({ Command: name, Action: "Deleted" });
           continue;
         }
 
@@ -30,14 +42,17 @@ module.exports = async (client) => {
             description,
             options,
           });
-
           console.log(`🔁 Edited command "${name}".`);
+          summary.push({ Command: name, Action: "Edited" });
+        } else {
+          summary.push({ Command: name, Action: "No Change" });
         }
       } else {
-        if (localCommand.deleted) {
+        if (deleted) {
           console.log(
             `⏩ Skipping registering command "${name}" as it's set to delete.`
           );
+          summary.push({ Command: name, Action: "Skipped (Deleted)" });
           continue;
         }
 
@@ -47,10 +62,17 @@ module.exports = async (client) => {
           options,
         });
 
-        console.log(`👍 Registered command "${name}."`);
+        console.log(`👍 Registered command "${name}".`);
+        summary.push({ Command: name, Action: "Registered" });
       }
     }
+
+    // Print summary table
+    if (summary.length) {
+      console.log("\nCommand Registration Summary:");
+      console.table(summary);
+    }
   } catch (error) {
-    console.log(`There was an error: ${error}`);
+    console.error(`❌ There was an error registering commands:`, error);
   }
 };
