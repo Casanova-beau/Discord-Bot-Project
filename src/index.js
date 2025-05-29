@@ -1,41 +1,16 @@
 require("dotenv").config();
 const { Client, IntentsBitField } = require("discord.js");
-const prefixHandler = require("./prefix-handler");
+const eventHandler = require("./handlers/eventHandler");
 
-const bot = new Client({
+const client = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMembers,
     IntentsBitField.Flags.GuildMessages,
     IntentsBitField.Flags.MessageContent,
-    IntentsBitField.Flags.GuildMembers,
   ],
 });
 
-prefixHandler(bot);
+eventHandler(client);
 
-bot.on("ready", (b) => {
-  console.log(`✅ Logged in as ${b.user.username}!`);
-});
-
-bot.on("messageCreate", (message) => {
-  if (message.author.bot) return;
-  if (message.content.toLowerCase() === "?ping") {
-    message.reply("Pong!");
-  }
-});
-
-bot.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-  const { commandName } = interaction;
-
-  if (commandName === "ping") {
-    await interaction.reply("Pong!");
-  } else {
-    await interaction.reply({ content: "Unknown command", ephemeral: true });
-  }
-});
-
-bot.login(process.env.TOKEN).catch((err) => {
-  console.error("❌ Failed to login:", err);
-  process.exit(1);
-});
+client.login(process.env.TOKEN);
