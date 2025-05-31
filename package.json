@@ -8,10 +8,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
     "mathjs": "^14.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Casanova-beau/Discord-Bot-Project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Casanova-beau/Discord-Bot-Project/issues"
+  },
+  "homepage": "https://github.com/Casanova-beau/Discord-Bot-Project#readme",
+  "description": ""
 }
